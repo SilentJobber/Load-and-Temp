@@ -5,11 +5,9 @@ setwd(dirname(rstudioapi::getSourceEditorContext()$path))
 source("Packages and Functions.R" )
 
 library(tidyverse)
-list.files()
-
 library(shiny)
 library(shinythemes)
-
+list.files()
 
 # input <- read.csv("test.csv") %>% mutate(x = as.Date(x))
 # tempload <- read.csv("Shiny_load_temp.csv") %>% mutate(DateTime = as.POSIXct(DateTime,tz = "UTC"))
@@ -41,9 +39,7 @@ ui <- fluidPage(theme = shinytheme("united"),
                   sidebarPanel(
                     dateRangeInput(
                       'daterange',
-                      label = paste('Date range input 2: range is limited,',
-                        'dd/mm/yy, language: fr, week starts on day 1 (Monday),',
-                        'separator is "-", start view is year'
+                      label = paste('Date Range Selection: Date Range cannot be greater than 31 Days'
                       ),
                       start = as.Date("2022-6-1"),
                       end = as.Date("2022-6-4"),

@@ -1,4 +1,31 @@
 library(tidyverse)
+library(lubridate)
+library(shinythemes)
+library(shinythemes)
+
+data.frame.DatetimeConversion <- function(df,format,TimeColumnName = "DateTime",Year = T,Month = T, DOW = F) {
+  if(!is.data.frame(df)){stop("Input is not a data.frame")}
+  #browser()
+  require(dplyr)
+  require(lubridate)
+  
+  paste(sum(as.integer(is.na(df[,TimeColumnName]))),"NA's due to DateTime in df.")
+  df <- filter(df,!is.na(TimeColumnName))
+  x <- df
+  ## Convert Datetime column into POSIXct if needed
+  if(is.POSIXct(df[,TimeColumnName])){
+    df <- data.frame(DateTime = df[,TimeColumnName], Date = as.Date(df[,TimeColumnName]),Hour = hour(df[,TimeColumnName])) %>% distinct() %>%
+      mutate(Hour = replace(Hour,Hour == 0, 24)) %>% mutate(Date = replace(Date, Hour == 24, Date[which(Hour == 24)] - 1)) %>% rename({{TimeColumnName}} := DateTime)
+    names(df)[1] <- TimeColumnName
+    
+    if(Year){df$Year <- year(df$Date)}
+    if(Month){df$Month <- month(df$Date)}
+    if(DOW){df$DOW <- weekdays(df$Date)}
+  } else(stop("Convert TimeColumnName to POSIXct before using this function"))
+  
+  df <- left_join(df,x)
+  return(df)
+}
 
 server <- function(input, output, session) {
   
